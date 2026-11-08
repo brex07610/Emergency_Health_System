@@ -1,0 +1,44 @@
+@model AmbulanceInputViewModel
+@{
+	var editing = Model.Id.HasValue;
+	ViewData["Title"] = editing ? "Edit ambulance" : "Add ambulance";
+	var action = editing ? "EditAmbulance" : "CreateAmbulance";
+}
+
+<div class="row justify-content-center">
+	<div class="col-md-7 col-lg-6">
+		<h1 class="h2 mb-4">@(editing ? "Edit ambulance" : "Add ambulance")</h1>
+		<form asp-action="@action" asp-route-id="@Model.Id" method="post">
+			<div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+			@if (editing)
+			{
+				<input asp-for="Id" type="hidden" />
+			}
+			<div class="mb-3">
+				<label asp-for="VehicleNumber" class="form-label"></label>
+				<input asp-for="VehicleNumber" class="form-control" />
+				<span asp-validation-for="VehicleNumber" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="TransportType" class="form-label"></label>
+				<select asp-for="TransportType" asp-items="Html.GetEnumSelectList<TransportType>()" class="form-select"></select>
+				<span asp-validation-for="TransportType" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="Status" class="form-label"></label>
+				<select asp-for="Status" asp-items="Html.GetEnumSelectList<AmbulanceStatus>()" class="form-select"></select>
+				<span asp-validation-for="Status" class="text-danger"></span>
+			</div>
+			<div class="mb-4">
+				<label asp-for="CurrentLocation" class="form-label"></label>
+				<input asp-for="CurrentLocation" class="form-control" />
+				<span asp-validation-for="CurrentLocation" class="text-danger"></span>
+			</div>
+			<button type="submit" class="btn btn-primary">Save ambulance</button>
+			<a asp-action="Ambulances" class="btn btn-outline-secondary ms-2">Cancel</a>
+		</form>
+	</div>
+</div>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

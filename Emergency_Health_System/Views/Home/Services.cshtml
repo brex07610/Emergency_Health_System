@@ -1,0 +1,49 @@
+@{
+	ViewData["Title"] = "Services";
+}
+
+<section class="section-heading page-intro mb-4">
+	<span class="eyebrow">OUR SERVICES</span>
+	<h1 class="display-6 mt-2">Ambulance request coordination</h1>
+	<p class="text-muted">The prototype brings patient requests and staff updates together in one place.</p>
+</section>
+
+<div class="row g-3 mb-4">
+	<div class="col-md-4">
+		<article class="feature-card h-100">
+			<span class="step-number">01 · REQUEST</span>
+			<h2 class="h5 mt-3">Road transport</h2>
+			<p class="text-muted mb-0">Submit pickup and destination information, transport type, and the details staff need to review the request.</p>
+		</article>
+	</div>
+	<div class="col-md-4">
+		<article class="feature-card h-100">
+			<span class="step-number">02 · COORDINATE</span>
+			<h2 class="h5 mt-3">Air transport requests</h2>
+			<p class="text-muted mb-0">For demonstration purposes, an administrator can review an air-transport request and assign a matching available vehicle.</p>
+		</article>
+	</div>
+	<div class="col-md-4">
+		<article class="feature-card h-100">
+			<span class="step-number">03 · FOLLOW UP</span>
+			<h2 class="h5 mt-3">Status and ETA updates</h2>
+			<p class="text-muted mb-0">Signed-in users can check the latest recorded request status, estimated arrival, and staff-reported vehicle location.</p>
+		</article>
+	</div>
+</div>
+
+<div class="safety-note">
+	<div class="safety-icon" aria-hidden="true">!</div>
+	<div>
+		<h2 class="h5 mb-1">About this prototype</h2>
+		<p class="mb-0">This site is a software demonstration. It is not operated by a Ministry of Health, does not dispatch vehicles, and cannot provide real emergency care.</p>
+	</div>
+</div>
+
+<div class="page-action-bar mt-4">
+	<div>
+		<h2 class="h5 mb-1">Ready to start a request?</h2>
+		<p class="text-muted mb-0">Sign in to share the details and follow request updates.</p>
+	</div>
+	<a asp-controller="Bookings" asp-action="Create" class="btn btn-primary">Request an ambulance</a>
+</div>

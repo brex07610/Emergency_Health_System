@@ -1,0 +1,59 @@
+@model IReadOnlyList<Booking>
+@{
+	ViewData["Title"] = "My requests";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 page-title-row">
+	<div>
+		<span class="eyebrow">REQUEST HISTORY</span>
+		<h1 class="h2 mt-2 mb-0">My ambulance requests</h1>
+	</div>
+	<a asp-action="Create" class="btn btn-primary">New request</a>
+</div>
+
+@if (Model.Count == 0)
+{
+	<div class="alert alert-info" role="status">
+		You have not submitted any requests yet. <a asp-action="Create" class="alert-link">Request an ambulance</a> to get started.
+	</div>
+}
+else
+{
+	<div class="table-responsive data-table-panel">
+		<table class="table align-middle">
+			<thead>
+				<tr>
+					<th>Request</th>
+					<th>Submitted</th>
+					<th>Transport</th>
+					<th>Emergency</th>
+					<th>Status</th>
+					<th><span class="visually-hidden">Details</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var booking in Model)
+				{
+					<tr>
+						<td>#@booking.Id</td>
+						<td>@booking.BookingTime.ToLocalTime().ToString("g")</td>
+						<td>@booking.RequestedTransport</td>
+						<td>@booking.EmergencyType</td>
+						<td>@booking.CurrentStatus</td>
+						<td>
+							<a asp-action="Track" asp-route-id="@booking.Id">Track</a>
+							<span class="text-muted">·</span>
+							<a asp-action="Details" asp-route-id="@booking.Id">Details</a>
+							@if (booking.CurrentStatus == BookingStatus.Pending && !booking.AmbulanceId.HasValue)
+							{
+								<form asp-action="Cancel" asp-route-id="@booking.Id" method="post" class="d-inline" onsubmit="return confirm('Cancel this pending request?');">
+									<button type="submit" class="btn btn-link btn-sm p-0">Cancel</button>
+								</form>
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}

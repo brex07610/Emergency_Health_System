@@ -1,0 +1,114 @@
+@model Booking
+@{
+	ViewData["Title"] = $"Review request #{Model.Id}";
+	var availableAmbulances = ViewBag.AvailableAmbulances as IReadOnlyList<Ambulance> ?? [];
+	var statusModel = ViewBag.StatusModel as UpdateBookingStatusViewModel ?? new UpdateBookingStatusViewModel { BookingId = Model.Id, CurrentStatus = Model.CurrentStatus };
+}
+
+<div class="row justify-content-center">
+	<div class="col-lg-9">
+		<div class="d-flex justify-content-between align-items-start mb-3">
+			<div>
+				<h1 class="h2">Request #@Model.Id</h1>
+				<p class="text-muted mb-1">Submitted @Model.BookingTime.ToLocalTime().ToString("f")</p>
+				<p class="mb-0">Patient: <strong>@(string.IsNullOrWhiteSpace(Model.User.FullName) ? "Name not provided" : Model.User.FullName)</strong> · @Model.User.Email</p>
+				@if (!string.IsNullOrWhiteSpace(Model.User.PhoneNumber))
+				{
+					var phoneNumber = Model.User.PhoneNumber;
+					var digits = new string(phoneNumber.Where(char.IsDigit).ToArray());
+					var dialableNumber = phoneNumber.TrimStart().StartsWith("+", StringComparison.Ordinal) ? $"+{digits}" : digits;
+					<p class="mb-0">Phone: <a href="tel:@dialableNumber">@phoneNumber</a></p>
+				}
+				else
+				{
+					<p class="small text-muted mb-0">No phone number was provided for this account.</p>
+				}
+			</div>
+			<span class="badge text-bg-secondary fs-6">@Model.CurrentStatus</span>
+		</div>
+		@if (TempData["StatusMessage"] is string message)
+		{
+			<div class="alert alert-success" role="status">@message</div>
+		}
+		<div asp-validation-summary="All" class="text-danger mb-3" role="alert"></div>
+		<div class="card mb-4">
+			<div class="card-body">
+				<h2 class="h5">Patient request</h2>
+				<dl class="row mb-0">
+					<dt class="col-sm-4">Transport</dt><dd class="col-sm-8">@Model.RequestedTransport</dd>
+					<dt class="col-sm-4">Pickup</dt><dd class="col-sm-8">@Model.PickupLocation</dd>
+					<dt class="col-sm-4">Destination</dt><dd class="col-sm-8">@Model.Destination</dd>
+					<dt class="col-sm-4">Emergency type</dt><dd class="col-sm-8">@Model.EmergencyType</dd>
+					<dt class="col-sm-4">Medical details</dt><dd class="col-sm-8">@Model.MedicalProblem</dd>
+					@if (!string.IsNullOrWhiteSpace(Model.PatientHistory))
+					{
+						<dt class="col-sm-4">Relevant history</dt><dd class="col-sm-8">@Model.PatientHistory</dd>
+					}
+				</dl>
+			</div>
+		</div>
+		@if (Model.Ambulance is null && Model.CurrentStatus is not (BookingStatus.Complete or BookingStatus.Cancelled))
+		{
+			<section class="card mb-4">
+				<div class="card-body">
+					<h2 class="h5">Assign an ambulance</h2>
+					@if (availableAmbulances.Count == 0)
+					{
+						<p class="text-muted mb-0">No available @Model.RequestedTransport ambulances. Add one or update the fleet status first.</p>
+					}
+					else
+					{
+						<div asp-validation-summary="All" class="text-danger mb-3" role="alert"></div>
+						<form asp-action="AssignAmbulance" asp-route-id="@Model.Id" method="post">
+							<div class="row align-items-end">
+								<div class="col-md-6 mb-3">
+									<label for="ambulanceId" class="form-label">Available @Model.RequestedTransport vehicle</label>
+									<select id="ambulanceId" name="ambulanceId" class="form-select" required>
+										@foreach (var ambulance in availableAmbulances)
+										{
+											<option value="@ambulance.Id">@ambulance.VehicleNumber — @ambulance.CurrentLocation</option>
+										}
+									</select>
+								</div>
+								<div class="col-md-4 mb-3">
+									<label for="estimatedArrival" class="form-label">Estimated arrival</label>
+									<input id="estimatedArrival" name="estimatedArrival" type="datetime-local" class="form-control" />
+								</div>
+								<div class="col-md-2 mb-3"><button type="submit" class="btn btn-primary w-100">Assign</button></div>
+							</div>
+						</form>
+					}
+				</div>
+			</section>
+		}
+		else if (Model.Ambulance is not null)
+		{
+			<div class="alert alert-info">Assigned vehicle: <strong>@Model.Ambulance.VehicleNumber</strong> (@Model.Ambulance.Status) · @Model.Ambulance.CurrentLocation</div>
+		}
+		<section class="card mb-4">
+			<div class="card-body">
+				<h2 class="h5">Update request status</h2>
+				<form asp-action="UpdateBookingStatus" asp-route-id="@Model.Id" method="post">
+					<input asp-for="@statusModel.BookingId" type="hidden" name="BookingId" value="@statusModel.BookingId" />
+					<div class="row align-items-end">
+						<div class="col-md-5 mb-3">
+							<label for="CurrentStatus" class="form-label">Booking status</label>
+								<select id="CurrentStatus" name="CurrentStatus" class="form-select">
+									@foreach (var status in (IReadOnlyList<BookingStatus>)ViewBag.AllowedStatuses)
+									{
+										<option value="@status" selected="@(status == statusModel.CurrentStatus)">@status</option>
+									}
+								</select>
+						</div>
+						<div class="col-md-5 mb-3">
+							<label for="EstimatedArrivalStatus" class="form-label">Estimated arrival</label>
+							<input id="EstimatedArrivalStatus" name="EstimatedArrival" type="datetime-local" class="form-control" value="@(statusModel.EstimatedArrival?.ToLocalTime().ToString("yyyy-MM-ddTHH:mm"))" />
+						</div>
+						<div class="col-md-2 mb-3"><button type="submit" class="btn btn-outline-primary w-100">Save</button></div>
+					</div>
+				</form>
+			</div>
+		</section>
+		<a asp-action="Bookings">Back to requests</a>
+	</div>
+</div>

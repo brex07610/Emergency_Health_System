@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Emergency health support";
+}
+
+<section class="home-hero mb-5" aria-labelledby="home-hero-heading">
+    <img class="hero-image" src="~/b0a4509e-54bf-4ede-8bb5-2d7731a297dd.png" alt="" />
+    <div class="hero-content">
+        <span class="eyebrow">EMERGENCY HEALTH SUPPORT</span>
+        <h1 id="home-hero-heading" class="fw-bold mt-3">Help starts with a clear next step.</h1>
+        <p class="lead mt-3 mb-4">Request ambulance transport, share the essential details, and follow your request status from one place.</p>
+        <div class="d-flex flex-wrap gap-2">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Bookings" asp-action="Create" class="btn btn-primary btn-lg">
+                    <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13.5h1.7l1.5-4h9.5l3.2 4H21v5h-2.2a2.3 2.3 0 0 1-4.6 0H9.8a2.3 2.3 0 0 1-4.6 0H3v-5Zm4.5-6h7.6l-1.1-3H8.6l-1.1 3Zm-.4 9.8a1.1 1.1 0 1 0 2.2 0 1.1 1.1 0 0 0-2.2 0Zm9.3 0a1.1 1.1 0 1 0 2.2 0 1.1 1.1 0 0 0-2.2 0Z" /></svg>
+                    Request an ambulance
+                </a>
+                <a asp-controller="Bookings" asp-action="Index" class="btn btn-outline-light btn-lg">
+                    <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v16H3V4Zm3 3v2h2V7H6Zm4 0v2h8V7h-8Zm-4 4v2h2v-2H6Zm4 0v2h8v-2h-8Zm-4 4v2h2v-2H6Zm4 0v2h8v-2h-8Z" /></svg>
+                    My requests
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg">Create an account</a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg">Sign in</a>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="mb-5" aria-labelledby="how-it-works-heading">
+    <div class="section-heading mb-4">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2 id="how-it-works-heading" class="h2 mt-2">A simple, transparent process</h2>
+        <p class="text-muted mb-0">Keep the request clear and see what happens next.</p>
+    </div>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <article class="feature-card h-100">
+                <span class="step-number">01</span>
+                <h3 class="h5 mt-3">Share the details</h3>
+                <p class="text-muted mb-0">Provide pickup, destination, transport type, and the medical information needed to review your request.</p>
+            </article>
+        </div>
+        <div class="col-md-4">
+            <article class="feature-card h-100">
+                <span class="step-number">02</span>
+                <h3 class="h5 mt-3">Follow the status</h3>
+                <p class="text-muted mb-0">Check your request status and estimated arrival updates from your personal request list.</p>
+            </article>
+        </div>
+        <div class="col-md-4">
+            <article class="feature-card h-100">
+                <span class="step-number">03</span>
+                <h3 class="h5 mt-3">Stay informed</h3>
+                <p class="text-muted mb-0">When a vehicle is assigned, see its identifier and the latest location reported by staff.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="safety-note" aria-label="Emergency safety notice">
+    <div class="safety-icon" aria-hidden="true">!</div>
+    <div>
+        <h2 class="h5 mb-1">Need immediate emergency help?</h2>
+        <p class="mb-0">This website is a demonstration prototype and does not dispatch emergency services. Call your local emergency number if someone is in immediate danger.</p>
+    </div>
+</section>

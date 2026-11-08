@@ -1,0 +1,43 @@
+@model Booking
+@{
+	ViewData["Title"] = $"Track request #{Model.Id}";
+}
+
+<div class="row justify-content-center">
+	<div class="col-lg-8 request-track-page">
+		<p><a asp-action="Details" asp-route-id="@Model.Id">&larr; Back to request details</a></p>
+		<span class="eyebrow d-block mt-3">REQUEST UPDATES</span>
+		<h1 class="h2 mt-2">Track request #@Model.Id</h1>
+		<p class="text-muted">Request updates refresh automatically. Vehicle location is entered by staff and is not live GPS.</p>
+
+		<div class="card mb-4 tracking-panel" data-tracking-url="@Url.Action("TrackingStatus", "Bookings", new { id = Model.Id })">
+			<div class="card-body">
+				<div class="d-flex justify-content-between align-items-start mb-3">
+					<h2 class="h5 mb-0">Current status</h2>
+					<span class="badge text-bg-secondary fs-6" data-tracking-status>@Model.CurrentStatus</span>
+				</div>
+				@if (Model.CurrentStatus == BookingStatus.Pending)
+				{
+					<p class="mb-3" data-pending-message>Your request has been received and is awaiting review.</p>
+				}
+				else
+				{
+					<p class="mb-3 d-none" data-pending-message>Your request has been received and is awaiting review.</p>
+				}
+				<dl class="row mb-0">
+					<dt class="col-sm-4">Estimated arrival</dt>
+					<dd class="col-sm-8" data-tracking-eta>@(Model.EstimatedArrival?.ToLocalTime().ToString("f") ?? "Not available yet")</dd>
+					<dt class="col-sm-4">Assigned vehicle</dt>
+					<dd class="col-sm-8" data-tracking-vehicle>@(Model.Ambulance?.VehicleNumber ?? "Not assigned yet")</dd>
+					<dt class="col-sm-4">Last reported location</dt>
+					<dd class="col-sm-8" data-tracking-location>@(Model.Ambulance?.CurrentLocation ?? "Not available yet")</dd>
+				</dl>
+				<p class="small text-muted mt-3 mb-0">Last checked: <time data-tracking-checked>@DateTime.UtcNow.ToLocalTime().ToString("g")</time></p>
+				<p class="small text-danger mt-2 mb-0 d-none" role="alert" data-tracking-error>Unable to refresh updates. Please retry in a moment.</p>
+			</div>
+		</div>
+
+		<div class="alert alert-warning" role="alert">This is a prototype tracking display and does not contact emergency services. For an immediate emergency, call your local emergency number.</div>
+	</div>
+</div>
+

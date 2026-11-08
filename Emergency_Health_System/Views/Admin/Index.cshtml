@@ -1,0 +1,53 @@
+@model AdminDashboardViewModel
+@{
+	ViewData["Title"] = "MOH dashboard";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 page-title-row">
+	<div>
+		<span class="eyebrow">CARELINE OPERATIONS</span>
+		<h1 class="h2 mt-2 mb-1">MOH administration</h1>
+		<p class="text-muted mb-0">Overview of ambulance requests and fleet availability.</p>
+	</div>
+	<div class="d-flex flex-wrap gap-2">
+		<a asp-action="Users" class="btn btn-outline-secondary">Registered users</a>
+		<a asp-action="Ambulances" class="btn btn-outline-primary">Manage ambulances</a>
+	</div>
+</div>
+
+<div class="row g-3 mb-4 dashboard-stats">
+	<div class="col-6 col-lg"><div class="card h-100 dashboard-stat"><div class="card-body"><div class="stat-label">Pending requests</div><div class="display-6">@Model.PendingBookings</div><span class="stat-caption">Awaiting review</span></div></div></div>
+	<div class="col-6 col-lg"><div class="card h-100 dashboard-stat"><div class="card-body"><div class="stat-label">Active requests</div><div class="display-6">@Model.ActiveBookings</div><span class="stat-caption">In progress</span></div></div></div>
+	<div class="col-6 col-lg"><div class="card h-100 dashboard-stat"><div class="card-body"><div class="stat-label">Available vehicles</div><div class="display-6">@Model.AvailableAmbulances / @Model.TotalAmbulances</div><span class="stat-caption">Ready in fleet</span></div></div></div>
+	<div class="col-6 col-lg"><div class="card h-100 dashboard-stat"><div class="card-body"><div class="stat-label">Registered users</div><div class="display-6">@Model.RegisteredUsers</div><span class="stat-caption">Patient accounts</span></div></div></div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+		<h2 class="h4 mb-0">Recent requests</h2>
+		<a asp-action="Bookings" class="text-link">View all requests</a>
+	</div>
+@if (Model.RecentBookings.Count == 0)
+{
+	<p class="text-muted">No requests have been submitted yet.</p>
+}
+else
+{
+	<div class="table-responsive data-table-panel">
+		<table class="table align-middle">
+			<thead><tr><th>Request</th><th>Patient account</th><th>Submitted</th><th>Transport</th><th>Status</th><th></th></tr></thead>
+			<tbody>
+				@foreach (var booking in Model.RecentBookings)
+				{
+					<tr>
+						<td>#@booking.Id</td>
+						<td>@booking.User.Email</td>
+						<td>@booking.BookingTime.ToLocalTime().ToString("g")</td>
+						<td>@booking.RequestedTransport</td>
+						<td>@booking.CurrentStatus</td>
+						<td><a asp-action="Booking" asp-route-id="@booking.Id">Review</a></td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}

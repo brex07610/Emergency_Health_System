@@ -1,0 +1,64 @@
+@model CreateBookingViewModel
+@{
+	ViewData["Title"] = "Request an ambulance";
+}
+
+<div class="row justify-content-center page-form-layout">
+	<div class="col-lg-9 public-form-panel">
+		<span class="eyebrow">AMBULANCE REQUEST</span>
+		<h1 class="h2 mt-2 mb-2">Request an ambulance</h1>
+		<p class="text-muted mb-4">Share the essential details. Your request will be sent as pending for review.</p>
+		<div class="alert alert-warning" role="alert">
+			This prototype is not an emergency dispatch service. If someone is in immediate danger, contact your local emergency services directly.
+		</div>
+		<form asp-action="Create" method="post">
+			<div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+			<div class="mb-3">
+				<label asp-for="RequestedTransport" class="form-label"></label>
+				<select asp-for="RequestedTransport" asp-items="Html.GetEnumSelectList<TransportType>()" class="form-select">
+					<option value="">Choose transport</option>
+				</select>
+				<span asp-validation-for="RequestedTransport" class="text-danger"></span>
+			</div>
+			<div class="row">
+				<div class="col-md-6 mb-3">
+					<label asp-for="PickupLocation" class="form-label"></label>
+					<input asp-for="PickupLocation" class="form-control" autocomplete="street-address" />
+					<span asp-validation-for="PickupLocation" class="text-danger"></span>
+				</div>
+				<div class="col-md-6 mb-3">
+					<label asp-for="Destination" class="form-label"></label>
+					<input asp-for="Destination" class="form-control" />
+					<span asp-validation-for="Destination" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="mb-3">
+				<label asp-for="EmergencyType" class="form-label"></label>
+				<select asp-for="EmergencyType" class="form-select">
+					<option value="">Choose emergency type</option>
+					<option>Medical emergency</option>
+					<option>Injury</option>
+					<option>Pregnancy</option>
+					<option>Other</option>
+				</select>
+				<span asp-validation-for="EmergencyType" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="MedicalProblem" class="form-label"></label>
+				<textarea asp-for="MedicalProblem" class="form-control" rows="3"></textarea>
+				<span asp-validation-for="MedicalProblem" class="text-danger"></span>
+			</div>
+			<div class="mb-4">
+				<label asp-for="PatientHistory" class="form-label"></label>
+				<textarea asp-for="PatientHistory" class="form-control" rows="3"></textarea>
+				<span asp-validation-for="PatientHistory" class="text-danger"></span>
+			</div>
+			<button type="submit" class="btn btn-primary">Submit request</button>
+			<a asp-action="Index" class="btn btn-outline-secondary ms-2">My requests</a>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

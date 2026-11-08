@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b3b53" />
+    <meta name="description" content="Submit ambulance transport requests and follow request status updates." />
+    <title>@ViewData["Title"] - CareLine Health</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Emergency_Health_System.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white site-navbar">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark" aria-hidden="true">+</span>
+                    <span>CareLine <small>HEALTH SERVICES</small></span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation" aria-controls="mainNavigation"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse" id="mainNavigation">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Services">Services</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Tips">Tips</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Moh">About</a></li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Bookings" asp-action="Create">Request ambulance</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Bookings" asp-action="Index">My requests</a></li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Index">MOH admin</a></li>
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav align-items-lg-center">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item"><span class="nav-link account-label"><svg class="account-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5h20v14H2V5Zm10 7.1L4.2 7h15.6L12 12.1Zm-8 4.9h16V8.7l-8 5.2-8-5.2V17Z" /></svg>Hello, @User.Identity.Name</span></li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm ms-lg-2">Sign out</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Sign in</a></li>
+                            <li class="nav-item"><a class="btn btn-primary btn-sm ms-lg-2" asp-controller="Account" asp-action="Register">Create account</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="container page-content">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container d-flex flex-column flex-sm-row justify-content-between gap-2">
+            <span>CareLine Health Services · Demonstration prototype</span>
+            <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
